@@ -1,0 +1,84 @@
+﻿@using ASM.Models.ViewModels.Combo;
+@model IEnumerable<ASM.Models.ViewModels.Combo.ComboViewModel>
+@{
+    ViewData["Title"] = "Danh sách Combo";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+
+}
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<div class="app-title">
+    <ul class="app-breadcrumb breadcrumb side">
+        <li class="breadcrumb-item active"><a href="#"><b>@ViewData["Title"]</b></a></li>
+    </ul>
+    <div id="clock"></div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile">
+            <div class="tile-body">
+                <div class="row element-button">
+                    <div class="col-sm-2">
+
+                        <a class="btn btn-add btn-sm createbtn" asp-action="Create" asp-controller="Combo" asp-area="Admin" title="Thêm">
+                            <i class="fas fa-plus"></i>
+                            Tạo mới Combo
+                        </a>
+                    </div>
+                </div>
+                <table class="table table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Tên Combo</th>
+                            <th>Mô tả</th>
+                            <th>Giá</th>
+                            <th>Ảnh</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.ComboName</td>
+                                    <td>@item.Description</td>
+                                    <td>@item.Price</td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                        {
+                                            <img src="@item.ImageUrl" width="100" height="100" class="rounded-circle mb-2" />
+                                        }
+                                    </td>
+                                    <td>@(item.IsAvailable ? "Hoạt động" : "Không hoạt động")</td>
+                                    <td>
+                                        <a asp-area="Admin" asp-controller="Combo" asp-action="Edit" asp-route-id="@item.ComboID" class="btn btn-warning btn-sm">Sửa</a>
+                                        <a asp-area="Admin" asp-controller="Combo" asp-action="Details" asp-route-id="@item.ComboID" class="btn btn-info btn-sm">Chi tiết</a>
+                                        <a asp-area="Admin" asp-controller="Combo" asp-action="ChangeStatus" asp-route-id="@item.ComboID" class="btn btn-outline-info btn-sm">Đổi trạng thái</a>
+
+                                        <form asp-area="Admin" asp-controller="Combo" asp-action="Delete" asp-route-id="@item.ComboID" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa sản phẩm này không?');" style="display:inline;">
+                                            <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
+                                        </form>
+
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="7" class="text-center">Không có dữ liệu sản phẩm</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>

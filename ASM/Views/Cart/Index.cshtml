@@ -1,0 +1,64 @@
+﻿@using ASM.Models.ViewModels.Cart
+@model CartSummaryViewModel
+<h2>Giỏ hàng của bạn</h2>
+@if (!Model.Items.Any())
+{
+        <p>Giỏ hàng của bạn đang trống.</p>
+}
+else
+{
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Ảnh</th>
+                    <th>Sản phẩm</th>
+                    <th>Giá</th>
+                    <th>Số lượng</th>
+                    <th>Action</th>
+                    <th>Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.Items)
+            {
+                        <tr>
+                    <td><img src="@item.ImageURL" width="80" /></td>
+                    <td>@item.Name</td>
+                    <td>@item.Price.ToString("N0") VNĐ</td>
+                    <td>
+                        <form asp-action="Decrease" method="post" class="d-inline">
+                            <input type="hidden" name="productId" value="@item.ProductID" />
+                            <input type="hidden" name="comboId" value="@item.ComboID" />
+                            <button class="btn btn-sm btn-secondary">-</button>
+                        </form>
+                        @item.Quantity
+                        <form asp-action="Increase" method="post" class="d-inline">
+                            <input type="hidden" name="productId" value="@item.ProductID" />
+                            <input type="hidden" name="comboId" value="@item.ComboID" />
+                            <button class="btn btn-sm btn-secondary">+</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form asp-action="Remove" method="post">
+                            <input type="hidden" name="productId" value="@item.ProductID" />
+                            <input type="hidden" name="comboId" value="@item.ComboID" />
+                            <button type="submit" class="btn btn-warning">Xóa</button>
+                        </form>
+                    </td>
+                    <td>@(item.Price * item.Quantity) VNĐ</td>
+                        </tr>
+            }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4" class="text-end"><strong>Tổng cộng:</strong></td>
+                    <td><strong>@Model.TotalPrice VNĐ</strong></td>
+                <td>
+                    <form asp-action="Checkout" asp-controller="Order" method="get">
+                        <button class="btn btn-success">Đặt hàng</button>
+                    </form>
+                </td>
+                </tr>
+            </tfoot>
+        </table>
+}

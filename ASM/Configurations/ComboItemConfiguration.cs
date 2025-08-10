@@ -15,6 +15,20 @@ namespace ASM.Configurations
             builder.HasOne(ci => ci.Product)
                    .WithMany(p => p.ComboItems)
                    .HasForeignKey(ci => ci.ProductID);
+            builder.HasData(
+           new ComboItem
+           {
+               ComboID = 1,
+               ProductID = 1, // Burger
+               Quantity = 1
+           },
+           new ComboItem
+           {
+               ComboID = 1,
+               ProductID = 3, // Coca
+               Quantity = 1
+           }
+       );
         }
     }
 }

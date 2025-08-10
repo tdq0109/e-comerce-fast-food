@@ -14,8 +14,7 @@ namespace ASM.Models.AutoMapperConfiguration
 
             CreateMap<OrderItemCreateViewModel, OrderDetail>().ReverseMap();
 
-            CreateMap<Order, OrderHistoryViewModel>()
-                .ForMember(dest => dest.Items, opt => opt.Ignore());
+            CreateMap<Order, OrderHistoryViewModel>();
             CreateMap<OrderHistoryViewModel, Order>()
                 .ForMember(dest => dest.OrderDetails, opt => opt.Ignore());
         }

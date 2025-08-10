@@ -1,0 +1,66 @@
+﻿@model ASM.Models.ViewModels.User.UserProfileViewModel
+
+<h2>Cập nhật thông tin cá nhân</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@{
+    ViewData["Title"] = "Cập nhật thông tin";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<form asp-action="Profile" asp-action="Account" asp-area="Admin" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label asp-for="FullName" class="form-label"></label>
+        <input asp-for="FullName" class="form-control" />
+        <span asp-validation-for="FullName" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Phone" class="form-label"></label>
+        <input asp-for="Phone" class="form-control" />
+        <span asp-validation-for="Phone" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Address" class="form-label"></label>
+        <input asp-for="Address" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Gender" class="form-label"></label>
+        <select asp-for="Gender" class="form-select">
+            <option value="">--Chọn giới tính--</option>
+            <option value="Male" selected="@Model.Gender == "Male"">Nam</option>
+            <option value="Female" selected="@Model.Gender == "Female"">Nữ</option>
+            <option value="Other" selected="@Model.Gender == "Other"">Khác</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label asp-for="DateOfBirth" class="form-label"></label>
+        <input asp-for="DateOfBirth" type="date" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Ảnh đại diện hiện tại</label><br />
+        @if (!string.IsNullOrEmpty(Model.AvatarUrl))
+        {
+            <img src="@Model.AvatarUrl" alt="Avatar" style="max-width: 150px; max-height:150px;" />
+        }
+        else
+        {
+            <span>Chưa có ảnh đại diện</span>
+        }
+    </div>
+    <div class="mb-3">
+        <label asp-for="Avatar" class="form-label">Thay đổi ảnh đại diện</label>
+        <input asp-for="Avatar" type="file" class="form-control" />
+        <span asp-validation-for="Avatar" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+</form>

@@ -30,7 +30,10 @@ namespace ASM.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartID"));
 
-                    b.Property<int>("ProductID")
+                    b.Property<int?>("ComboID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProductID")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -40,6 +43,8 @@ namespace ASM.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("CartID");
+
+                    b.HasIndex("ComboID");
 
                     b.HasIndex("ProductID");
 
@@ -64,6 +69,23 @@ namespace ASM.Migrations
                     b.HasKey("CategoryID");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryID = 1,
+                            CategoryName = "Burger"
+                        },
+                        new
+                        {
+                            CategoryID = 2,
+                            CategoryName = "Pizza"
+                        },
+                        new
+                        {
+                            CategoryID = 3,
+                            CategoryName = "Nước uống"
+                        });
                 });
 
             modelBuilder.Entity("ASM.Models.Combo", b =>
@@ -88,12 +110,28 @@ namespace ASM.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<bool>("IsAvailable")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("ComboID");
 
                     b.ToTable("Combos");
+
+                    b.HasData(
+                        new
+                        {
+                            ComboID = 1,
+                            ComboName = "Combo Burger + Nước",
+                            Description = "Gồm 1 burger bò và 1 lon Coca",
+                            ImageUrl = "/images/combo1.jpg",
+                            IsAvailable = true,
+                            Price = 65000m
+                        });
                 });
 
             modelBuilder.Entity("ASM.Models.ComboItem", b =>
@@ -112,6 +150,20 @@ namespace ASM.Migrations
                     b.HasIndex("ProductID");
 
                     b.ToTable("ComboItems");
+
+                    b.HasData(
+                        new
+                        {
+                            ComboID = 1,
+                            ProductID = 1,
+                            Quantity = 1
+                        },
+                        new
+                        {
+                            ComboID = 1,
+                            ProductID = 3,
+                            Quantity = 1
+                        });
                 });
 
             modelBuilder.Entity("ASM.Models.DeliveryRequest", b =>
@@ -196,6 +248,10 @@ namespace ASM.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<string>("Note")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
@@ -227,10 +283,13 @@ namespace ASM.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderDetailID"));
 
+                    b.Property<int?>("ComboID")
+                        .HasColumnType("int");
+
                     b.Property<int>("OrderID")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductID")
+                    b.Property<int?>("ProductID")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -240,6 +299,8 @@ namespace ASM.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("OrderDetailID");
+
+                    b.HasIndex("ComboID");
 
                     b.HasIndex("OrderID");
 
@@ -290,6 +351,9 @@ namespace ASM.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
                     b.Property<string>("Tags")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
@@ -303,6 +367,53 @@ namespace ASM.Migrations
                     b.HasIndex("CategoryID");
 
                     b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            ProductID = 1,
+                            CategoryID = 1,
+                            CreatedAt = new DateTime(2025, 8, 10, 15, 3, 56, 139, DateTimeKind.Local).AddTicks(3104),
+                            Description = "Burger thịt bò, phô mai và rau",
+                            ImageURL = "/images/burger.jpg",
+                            IsAvailable = true,
+                            IsCombo = false,
+                            Price = 55000m,
+                            ProductName = "Burger Bò Phô Mai",
+                            Quantity = 100,
+                            Tags = "burger,bo,pho mai",
+                            Topic = "Best Seller"
+                        },
+                        new
+                        {
+                            ProductID = 2,
+                            CategoryID = 2,
+                            CreatedAt = new DateTime(2025, 8, 10, 15, 3, 56, 139, DateTimeKind.Local).AddTicks(3112),
+                            Description = "Pizza topping hải sản và phô mai",
+                            ImageURL = "/images/pizza.jpg",
+                            IsAvailable = true,
+                            IsCombo = false,
+                            Price = 120000m,
+                            ProductName = "Pizza Hải Sản",
+                            Quantity = 100,
+                            Tags = "pizza,hai san",
+                            Topic = "Mới"
+                        },
+                        new
+                        {
+                            ProductID = 3,
+                            CategoryID = 3,
+                            CreatedAt = new DateTime(2025, 8, 10, 15, 3, 56, 139, DateTimeKind.Local).AddTicks(3118),
+                            Description = "Thức uống có gas",
+                            ImageURL = "/images/coca.jpg",
+                            IsAvailable = true,
+                            IsCombo = false,
+                            Price = 15000m,
+                            ProductName = "Coca-Cola Lon",
+                            Quantity = 100,
+                            Tags = "drink",
+                            Topic = "Mới"
+                        });
                 });
 
             modelBuilder.Entity("ASM.Models.User", b =>
@@ -362,29 +473,59 @@ namespace ASM.Migrations
 
                     b.Property<string>("Role")
                         .IsRequired()
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasDefaultValue("Customer");
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("UserID");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            UserID = -1,
+                            Address = "123 Main St",
+                            CreatedAt = new DateTime(2025, 8, 10, 15, 3, 56, 413, DateTimeKind.Local).AddTicks(6645),
+                            Email = "admin@example.com",
+                            FullName = "Admin",
+                            IsActive = true,
+                            PasswordHash = "$2a$11$EsLO/tK2fXkvkmebhoeS.uam4U6.S8PaByqVDkV6VbD5mMIXmfdz6",
+                            Phone = "0909999999",
+                            Role = "Admin"
+                        },
+                        new
+                        {
+                            UserID = -2,
+                            Address = "456 Second St",
+                            CreatedAt = new DateTime(2025, 8, 10, 15, 3, 56, 678, DateTimeKind.Local).AddTicks(4339),
+                            Email = "a@gmail.com",
+                            FullName = "Nguyễn Văn A",
+                            IsActive = true,
+                            PasswordHash = "$2a$11$knPkkpHWzeMV8VtwRjJ9s.nEpV6R3BkyLoXCZG72Vls5RXXUStCnW",
+                            Phone = "0912345678",
+                            Role = "Customer"
+                        });
                 });
 
             modelBuilder.Entity("ASM.Models.Cart", b =>
                 {
+                    b.HasOne("ASM.Models.Combo", "Combo")
+                        .WithMany("Carts")
+                        .HasForeignKey("ComboID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("ASM.Models.Product", "Product")
                         .WithMany("Carts")
                         .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ASM.Models.User", "User")
                         .WithMany("Carts")
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Combo");
 
                     b.Navigation("Product");
 
@@ -453,6 +594,11 @@ namespace ASM.Migrations
 
             modelBuilder.Entity("ASM.Models.OrderDetail", b =>
                 {
+                    b.HasOne("ASM.Models.Combo", "Combo")
+                        .WithMany("OrderDetails")
+                        .HasForeignKey("ComboID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("ASM.Models.Order", "Order")
                         .WithMany("OrderDetails")
                         .HasForeignKey("OrderID")
@@ -462,8 +608,9 @@ namespace ASM.Migrations
                     b.HasOne("ASM.Models.Product", "Product")
                         .WithMany("OrderDetails")
                         .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Combo");
 
                     b.Navigation("Order");
 
@@ -488,7 +635,11 @@ namespace ASM.Migrations
 
             modelBuilder.Entity("ASM.Models.Combo", b =>
                 {
+                    b.Navigation("Carts");
+
                     b.Navigation("ComboItems");
+
+                    b.Navigation("OrderDetails");
                 });
 
             modelBuilder.Entity("ASM.Models.Order", b =>

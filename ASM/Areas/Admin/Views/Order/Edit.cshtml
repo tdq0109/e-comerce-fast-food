@@ -1,0 +1,35 @@
+﻿@model ASM.Models.ViewModels.Order.OrderStatusEditViewModel
+
+@{
+    ViewData["Title"] = "Cập nhật trạng thái đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<h2>@ViewData["Title"]</h2>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="OrderID" />
+
+            <div class="form-group">
+                <label>Trạng thái hiện tại</label>
+                <input class="form-control" value="@Model.CurrentStatus" readonly />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="NewStatus"></label>
+                <select asp-for="NewStatus" asp-items="Model.StatusOptions" class="form-control"></select>
+                <span asp-validation-for="NewStatus" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-success">Lưu trạng thái</button>
+            <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+        </form>
+
+    </div>
+</div>
+

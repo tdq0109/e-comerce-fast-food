@@ -1,0 +1,91 @@
+﻿@using ASM.Models.ViewModels.Order;
+@{
+    var orders = ViewBag.AllOrders as List<OrderHistoryViewModel>;
+}
+@model ASM.Models.ViewModels.Order.OrderCreateViewModel
+
+<h2>Lịch sử đơn hàng</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Mã đơn</th>
+            <th>Ngày đặt</th>
+            <th>Trạng thái</th>
+            <th>Tổng tiền</th>
+            <th>Địa chỉ</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var o in orders)
+        {
+            <tr>
+                <td>@o.OrderID</td>
+                <td>@o.OrderDate.ToString("dd/MM/yyyy")</td>
+                <td>@o.Status</td>
+                <td>@o.TotalAmount.ToString("N0")</td>
+                <td>@o.DeliveryAddress</td>
+                <td>
+                    <a asp-action="GetOrderDetail" asp-route-id="@o.OrderID" class="btn btn-primary">
+                        Xem chi tiết
+                    </a>
+                    @if (o.Status != "Delivered" && o.Status != "Canceled")
+                    {
+                        <a asp-action="CancelOrder" asp-route-id="@o.OrderID" class="btn btn-danger">Hủy đơn</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (Model is OrderCreateViewModel orderDetail)
+{
+    <div class="modal fade show" style="display:block; background: rgba(0,0,0,0.5);" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Chi tiết đơn hàng</h5>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Địa chỉ giao hàng:</strong> @orderDetail.DeliveryAddress</p>
+                    <p><strong>Ghi chú:</strong> @orderDetail.Note</p>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Sản phẩm</th>
+                                <th>SL</th>
+                                <th>Giá</th>
+                                <th>Tổng</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Items != null && Model.Items.Any())
+                            {
+                                @foreach (var item in orderDetail.Items)
+                                {
+                                    <tr>
+                                        <td>@item.ProductName</td>
+                                        <td>@item.Quantity</td>
+                                        <td>@item.Price.ToString("N0")</td>
+                                        <td>@item.TotalPrice.ToString("N0")</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="3">Không có sản phẩm</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <a asp-action="OrderHistory" class="btn btn-secondary">Đóng</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,59 @@
+﻿@model ASM.Models.Product
+
+@{
+    ViewData["Title"] = "Chi tiết sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<h2>@ViewData["Title"]</h2>
+<hr />
+
+<div class="card">
+    <div class="card-header">
+        <h3>@(string.IsNullOrEmpty(Model.ProductName) ? "null" : Model.ProductName)</h3>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Mô tả</dt>
+            <dd class="col-sm-9">@(string.IsNullOrEmpty(Model.Description) ? "null" : Model.Description)</dd>
+
+            <dt class="col-sm-3">Giá</dt>
+            <dd class="col-sm-9">@Model.Price.ToString("N0") đ</dd>
+
+            <dt class="col-sm-3">Số lượng</dt>
+            <dd class="col-sm-9">@Model.Quantity</dd>
+
+            <dt class="col-sm-3">Danh mục</dt>
+            <dd class="col-sm-9">@(Model.Category != null ? Model.Category.CategoryName : "null")</dd>
+
+            <dt class="col-sm-3">Trạng thái</dt>
+            <dd class="col-sm-9">@((Model.IsAvailable) ? "Có sẵn" : "Hết hàng")</dd>
+
+            <dt class="col-sm-3">Chủ đề</dt>
+            <dd class="col-sm-9">@(string.IsNullOrEmpty(Model.Topic) ? "null" : Model.Topic)</dd>
+
+            <dt class="col-sm-3">Tags</dt>
+            <dd class="col-sm-9">@(string.IsNullOrEmpty(Model.Tags) ? "null" : Model.Tags)</dd>
+
+            <dt class="col-sm-3">Ngày tạo</dt>
+            <dd class="col-sm-9">@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm:ss")</dd>
+
+            <dt class="col-sm-3">Ảnh sản phẩm</dt>
+            <dd class="col-sm-9">
+                @if (!string.IsNullOrEmpty(Model.ImageURL))
+                {
+                    <img src="@Model.ImageURL" alt="Ảnh sản phẩm" style="max-height: 150px;" />
+                }
+                else
+                {
+                    <span>null</span>
+                }
+            </dd>
+        </dl>
+    </div>
+    <div class="card-footer">
+        <a asp-area="Admin" asp-controller="Product" asp-action="Index" class="btn btn-secondary">Quay lại</a>
+        <a asp-area="Admin" asp-controller="Product" asp-action="Edit" asp-route-id="@Model.ProductID" class="btn btn-primary">Sửa</a>
+    </div>
+</div>

@@ -1,49 +1,301 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    var userName = HttpContextAccessor.HttpContext.Session.GetString("UserName");
+    var isLoggedIn = !string.IsNullOrEmpty(userName);
+}
+
+<!DOCTYPE html>
+<html>
+
 <head>
+    <!-- Basic -->
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - ASM</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/ASM.styles.css" asp-append-version="true" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <!-- Site Metas -->
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link rel="shortcut icon" href="images/favicon.png" type="">
+
+    <title> Feane </title>
+
+    <!-- bootstrap core css -->
+    <link rel="stylesheet" type="text/css" href="~/css/bootstrap.css" />
+
+    <!--owl slider stylesheet -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <!-- nice select  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
+    <!-- font awesome style -->
+    <link href="~/css/font-awesome.min.css" rel="stylesheet" />
+
+    <!-- Custom styles for this template -->
+    <link href="~/css/style.css" rel="stylesheet" />
+    <!-- responsive style -->
+    <link href="~/css/responsive.css" rel="stylesheet" />
+    <style>
+        .header_section {
+            position: fixed;
+            width: 100%;
+            z-index: 1300;
+            top: 0;
+            left: 0;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+            /* Mặc định trong suốt */
+            .header_section:not(.header-scrolled) {
+                background-color: transparent;
+            }
+
+        /* Khi scroll thì có màu trắng và đổ bóng */
+        .header-scrolled {
+            background-color: grey;     
+        }
+
+        .fade-out {
+            animation: fadeOutAlert 5s forwards;
+        }
+
+        @@keyframes fadeOutAlert {
+            0% {
+                opacity: 1;
+            }
+
+            80% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+                display: none;
+            }
+        }
+
+    </style>
+
+
 </head>
+
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+
+    <div class="hero_area">
+        <div class="bg-box">
+            <img src="~/images/hero-bg.jpg" alt="">
+        </div>
+        <!-- header section strats -->
+        <header class="header_section fixed-top">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ASM</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+                <nav class="navbar navbar-expand-lg custom_nav-container fixed-top">
+                    <a class="navbar-brand"  asp-action="Index" asp-controller="Home">
+                        <span>
+                            Feane
+                        </span>
+                    </a>
+
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class=""> </span>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav  mx-auto ">
+                            <li class="nav-item active">
+                                <a class="nav-link" asp-action="Index" asp-controller="Home">Home <span class="sr-only">(current)</span></a>
+                            </li>
+                        </ul>
+                        <div class="user_option">
+                            @if (isLoggedIn)
+                            {
+                                <div class="user_link text-white">
+                                    <i class="fa fa-user" aria-hidden="true"></i>
+                                    <span><a asp-controller="Account" asp-action="Profile">Chào, @userName</a></span>
+                                    <form asp-action="Logout" asp-controller="Account" method="post" style="display:inline;">
+                                        <button type="submit" class="btn btn-link text-danger p-0 ml-2">Đăng xuất</button>
+                                    </form>
+                                </div>
+                            }
+                            else
+                            {
+                                <a asp-action="Login" asp-controller="Account" class="user_link" title="Hồ sơ người dùng">
+                                    <i class="fa fa-user" aria-hidden="true"></i>
+                                </a>
+                            }
+
+                            <a asp-controller="Cart" asp-action="Index" class="btn text-white" title="Giỏ hàng">
+                                <i class="fa fa-shopping-cart"></i> 
+                            </a>    
+                            <a asp-controller="Order" asp-action="OrderHistory" class="btn text-white" title="Lịch sử đơn hàng">
+                                <i class="fa fa-history"></i>
+                            </a>
+                            <button class="btn" data-toggle="modal" data-target="#advancedSearchModal" title="Tìm kiếm">
+                                <i class="fa fa-search text-white" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </header>
+        <!-- end header section -->
+        <!-- Modal -->
+        <div class="modal fade" id="advancedSearchModal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <form asp-action="FieldSearch" asp-controller="Product" method="get" class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="searchModalLabel">Tìm kiếm nâng cao theo sản phẩm (Không hỗ trợ tìm kiếm Combo)</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Đóng">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Chọn trường tìm kiếm</label>
+                            <select name="field" class="form-control">
+                                <option value="ProductName">Tên món</option>
+                                <option value="Price">Giá</option>
+                                <option value="CategoryName">Danh mục</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Nhập từ khóa</label>
+                            <input type="text" name="keyword" class="form-control" placeholder="Nhập từ khóa (Nếu tìm theo giá thì tìm giá chính xác của sản phẩm)" required />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Tìm</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        </div>
+<section>
+            <div class="container">
+                <main role="main">
+                    @RenderBody()
+                </main>
+            </div>
+</section>
+
+        <!-- footer section -->
+        <footer class="footer_section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 footer-col">
+                        <div class="footer_contact">
+                            <h4>
+                                Contact Us
+                            </h4>
+                            <div class="contact_link_box">
+                                <a href="">
+                                    <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                    <span>
+                                        Location
+                                    </span>
+                                </a>
+                                <a href="">
+                                    <i class="fa fa-phone" aria-hidden="true"></i>
+                                    <span>
+                                        Call +01 1234567890
+                                    </span>
+                                </a>
+                                <a href="">
+                                    <i class="fa fa-envelope" aria-hidden="true"></i>
+                                    <span>
+                                        demo@gmail.com
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 footer-col">
+                        <div class="footer_detail">
+                            <a href="" class="footer-logo">
+                                Feane
+                            </a>
+                            <p>
+                                Necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with
+                            </p>
+                            <div class="footer_social">
+                                <a href="">
+                                    <i class="fa fa-facebook" aria-hidden="true"></i>
+                                </a>
+                                <a href="">
+                                    <i class="fa fa-twitter" aria-hidden="true"></i>
+                                </a>
+                                <a href="">
+                                    <i class="fa fa-linkedin" aria-hidden="true"></i>
+                                </a>
+                                <a href="">
+                                    <i class="fa fa-instagram" aria-hidden="true"></i>
+                                </a>
+                                <a href="">
+                                    <i class="fa fa-pinterest" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 footer-col">
+                        <h4>
+                            Opening Hours
+                        </h4>
+                        <p>
+                            Everyday
+                        </p>
+                        <p>
+                            10.00 Am -10.00 Pm
+                        </p>
+                    </div>
+                </div>
+                <div class="footer-info">
+                    <p>
+                        &copy; <span id="displayYear"></span> All Rights Reserved By
+                        <a href="https://html.design/">Free Html Templates</a><br><br>
+                        &copy; <span id="displayYear"></span> Distributed By
+                        <a href="https://themewagon.com/" target="_blank">ThemeWagon</a>
+                    </p>
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+        </footer>
+        <!-- footer section -->
+        <!-- jQery -->
+        <script src="~/js/jquery-3.4.1.min.js"></script>
+        <!-- popper js -->
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+        </script>
+        <!-- bootstrap js -->
+        <script src="~/js/bootstrap.js"></script>
+        <!-- owl slider -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
+        </script>
+        <!-- isotope js -->
+        <script src="https://unpkg.com/isotope-layout@3.0.4/dist/isotope.pkgd.min.js"></script>
+        <!-- nice select -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
+        <!-- custom js -->
+        <script src="~/js/custom.js"></script>
+        <!-- Google Map -->
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
+        </script>
+        <!-- End Google Map -->
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - ASM - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        $(window).on("scroll", function () {
+            var heroHeight = $('.bg-box').outerHeight(); // Chiều cao của ảnh nền
+
+            if ($(window).scrollTop() > heroHeight) {
+                $('.header_section').addClass('header-scrolled');
+            } else {
+                $('.header_section').removeClass('header-scrolled');
+            }
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

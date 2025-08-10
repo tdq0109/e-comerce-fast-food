@@ -1,0 +1,37 @@
+﻿@model IEnumerable<ASM.Models.Category>
+@{
+    ViewData["Title"] = "Danh mục";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<h2>@ViewData["Title"]</h2>
+
+<a asp-action="Create" class="btn btn-primary createbtn" asp-controller="Categories" asp-area="Admin" title="Thêm">Tạo mới</a>
+
+<table id="table" class="table">
+    <thead>
+        <tr>
+            <th>Tên danh mục</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.CategoryName</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.CategoryID" class="btn btn-warning editbtn">Sửa</a> |
+                        <a asp-action="Details" asp-route-id="@item.CategoryID" class="btn btn-info">Chi tiết</a> |
+                        <form asp-action="Delete" asp-route-id="@item.CategoryID" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa danh mục này không?');" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

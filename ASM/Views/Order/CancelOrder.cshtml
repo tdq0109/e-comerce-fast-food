@@ -1,0 +1,15 @@
+﻿@model ASM.Models.ViewModels.Order.CancelOrderViewModel
+
+<h2>Hủy đơn hàng @Model.OrderID</h2>
+
+<form asp-action="CancelOrder" method="post">
+    <input asp-for="OrderID" type="hidden" />
+    <div class="form-group">
+        <label>Lý do hủy đơn</label>
+        <textarea asp-for="CancelReason" class="form-control" rows="4" required></textarea>
+        <span asp-validation-for="CancelReason" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-danger">Xác nhận hủy</button>
+    <a asp-action="OrderHistory" class="btn btn-secondary">Quay lại</a>
+</form>
+

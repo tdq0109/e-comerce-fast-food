@@ -13,6 +13,18 @@ namespace ASM.Configurations
             builder.Property(c => c.Description).HasMaxLength(500);
             builder.Property(c => c.Price).HasColumnType("decimal(18,2)");
             builder.Property(c => c.ImageUrl).HasMaxLength(255);
+            builder.Property(c => c.IsAvailable).HasDefaultValue(true);
+            builder.HasData(
+            new Combo
+            {
+                ComboID = 1,
+                ComboName = "Combo Burger + Nước",
+                Description = "Gồm 1 burger bò và 1 lon Coca",
+                Price = 65000,
+                IsAvailable = true,
+                ImageUrl = "/images/combo1.jpg"
+            }
+        );
         }
     }
 }

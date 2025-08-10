@@ -15,7 +15,12 @@ namespace ASM.Configurations
                    .HasForeignKey(od => od.OrderID);
             builder.HasOne(od => od.Product)
                    .WithMany(p => p.OrderDetails)
-                   .HasForeignKey(od => od.ProductID);
+                   .HasForeignKey(od => od.ProductID)
+                   .OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(od => od.Combo)
+                   .WithMany(p => p.OrderDetails)
+                   .HasForeignKey(od => od.ComboID)
+                   .OnDelete(DeleteBehavior.Restrict);
         }
     }
 

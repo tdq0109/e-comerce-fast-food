@@ -1,0 +1,67 @@
+﻿@model IEnumerable<ASM.Models.Order>
+
+@{
+    ViewData["Title"] = "Lịch sử đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
+<div class="app-title">
+    <ul class="app-breadcrumb breadcrumb side">
+        <li class="breadcrumb-item active"><a href="#"><b>@ViewData["Title"]</b></a></li>
+    </ul>
+    <div id="clock"></div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile">
+            <div class="tile-body">
+
+                <table class="table table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Mã đơn hàng</th>
+                            <th>Ngày đặt</th>
+                            <th>Trạng thái</th>
+                            <th>Tổng tiền</th>
+                            <th>Địa chỉ giao hàng</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var order in Model)
+                            {
+                                <tr>
+                                    <td>@order.OrderID</td>
+                                    <td>@order.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td>@order.Status</td>
+                                    <td>@order.TotalAmount.ToString("N0") đ</td>
+                                    <td>@order.DeliveryAddress</td>
+                                    <td>
+                                        <a asp-area="Admin" asp-controller="Order" asp-action="Details" asp-route-id="@order.OrderID" class="btn btn-info btn-sm">Chi tiết</a>
+                                        <a asp-area="Admin" asp-controller="Order" asp-action="Edit" asp-route-id="@order.OrderID" class="btn btn-warning btn-sm">Sửa</a>                                
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center">Không có đơn hàng nào</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>

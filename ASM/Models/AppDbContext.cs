@@ -24,12 +24,17 @@ namespace ASM.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=QUANG\\SQLEXPRESS01;Initial Catalog=ASM;Integrated Security=True;Trust Server Certificate=True");
-        }
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer(this.Database.GetDbConnection().ConnectionString);
+            }
+        }   
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+            base.OnModelCreating(modelBuilder);
+
         }
     }
 }

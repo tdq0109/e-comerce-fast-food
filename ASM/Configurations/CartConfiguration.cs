@@ -11,10 +11,18 @@ namespace ASM.Configurations
             builder.HasKey(c => c.CartID);
             builder.HasOne(c => c.User)
                    .WithMany(u => u.Carts)
-                   .HasForeignKey(c => c.UserID);
+                   .HasForeignKey(c => c.UserID)
+                  .OnDelete(DeleteBehavior.Cascade);
             builder.HasOne(c => c.Product)
                    .WithMany(p => p.Carts)
-                   .HasForeignKey(c => c.ProductID);
+                   .HasForeignKey(c => c.ProductID)
+                   .OnDelete(DeleteBehavior.Restrict) 
+                   .IsRequired(false);
+            builder.HasOne(c => c.Combo)
+                   .WithMany(co => co.Carts)
+                   .HasForeignKey(c => c.ComboID)
+                   .OnDelete(DeleteBehavior.Restrict)
+                   .IsRequired(false);
         }
     }
 

@@ -13,6 +13,7 @@ namespace ASM.Configurations
             builder.Property(o => o.DeliveryAddress).IsRequired().HasMaxLength(200);
             builder.Property(o => o.TotalAmount).HasColumnType("decimal(18,2)");
             builder.Property(o => o.CancelReason).HasMaxLength(255);
+            builder.Property(o => o.Note).HasMaxLength(255);
             builder.HasOne(o => o.User)
                    .WithMany(u => u.Orders)
                    .HasForeignKey(o => o.UserID);

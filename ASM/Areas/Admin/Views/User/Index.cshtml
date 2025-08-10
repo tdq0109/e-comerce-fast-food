@@ -1,0 +1,85 @@
+﻿@using ASM.Models
+@model IEnumerable<ASM.Models.User>
+
+@{
+    ViewData["Title"] = "Danh sách người dùng";
+}
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@{
+    ViewData["Title"] = "Cập nhật thông tin";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<div class="app-title">
+    <ul class="app-breadcrumb breadcrumb side">
+        <li class="breadcrumb-item active"><a href="#"><b>@ViewData["Title"]</b></a></li>
+    </ul>
+    <div id="clock"></div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile">
+            <div class="tile-body">
+                <div class="row element-button">
+                    <div class="col-sm-2">
+
+                        <a class="btn btn-add btn-sm createbtn" asp-action="Create" asp-controller="User" asp-area="Admin" title="Thêm">
+                            <i class="fas fa-plus"></i>
+                            Tạo mới khách hàng
+                        </a>
+                    </div>
+                </div>
+                <table class="table table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Họ và tên</th>
+                            <th>Email</th>
+                            <th>Số điện thoại</th>
+                            <th>Ngày sinh</th>
+                            <th>Quyền</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var user in Model)
+                            {
+                                <tr>
+                                    <td>@user.FullName</td>
+                                    <td>@user.Email</td>
+                                    <td>@user.Phone</td>
+                                    <td>@(user.DateOfBirth.HasValue ? user.DateOfBirth.Value.ToString("dd/MM/yyyy") : "-")</td>
+                                    <td>@(user.Role == UserRole.Admin ? "Admin" : "Khách hàng")</td>
+                                    <td>@(user.IsActive ? "Hoạt động" : "Không hoạt động")</td>
+                                    <td>
+                                        <a asp-area="Admin" asp-controller="User" asp-action="Edit" asp-route-id="@user.UserID" class="btn btn-warning btn-sm">Sửa</a>
+                                        <a asp-area="Admin" asp-controller="User" asp-action="Details" asp-route-id="@user.UserID" class="btn btn-info btn-sm">Chi tiết</a>
+                                        <a asp-area="Admin" asp-controller="User" asp-action="ChangeStatus" asp-route-id="@user.UserID" class="btn btn-outline-info btn-sm">Đổi trạng thái</a>
+
+                                        <form asp-area="Admin" asp-controller="User" asp-action="Delete" asp-route-id="@user.UserID" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa người dùng này không?');" style="display:inline;">
+                                            <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
+                                        </form>
+
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="7" class="text-center">Không có dữ liệu người dùng</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>

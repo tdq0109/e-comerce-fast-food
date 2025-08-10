@@ -1,0 +1,70 @@
+﻿@model ASM.Models.Combo
+
+@{
+    ViewData["Title"] = "Chi tiết Combo";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<h2>@ViewData["Title"]</h2>
+<hr />
+
+<div class="card">
+    <div class="card-header">
+        <h3>@(string.IsNullOrEmpty(Model.ComboName) ? "null" : Model.ComboName)</h3>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Tên Combo</dt>
+            <dd class="col-sm-9">@(string.IsNullOrEmpty(Model.ComboName) ? "null" : Model.ComboName)</dd>
+            <dt class="col-sm-3">Mô tả</dt>
+            <dd class="col-sm-9">@(string.IsNullOrEmpty(Model.Description) ? "null" : Model.Description)</dd>
+
+            <dt class="col-sm-3">Giá</dt>
+            <dd class="col-sm-9">@Model.Price.ToString("N0") đ</dd>
+
+            <dt class="col-sm-3">Ảnh Combo</dt>
+            <dd class="col-sm-9">
+                @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                {
+                    <img src="@Model.ImageUrl" alt="Ảnh Combo" style="max-height: 150px;" />
+                }
+                else
+                {
+                    <span>null</span>
+                }
+            </dd>
+            <table class="table table-bordered mt-3">
+                <thead>
+                    <tr>
+                        <th>Tên món</th>
+                        <th>Số lượng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.ComboItems != null && Model.ComboItems.Any())
+                    {
+                        foreach (var item in Model.ComboItems)
+                        {
+                            <tr>
+                                <td>@(item?.Product?.ProductName ?? "Không có tên")</td>
+                                <td>@item?.Quantity</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="2">Không có món trong combo</td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </dl>
+    </div>
+    <div class="card-footer">
+        <a asp-area="Admin" asp-controller="Combo" asp-action="Index" class="btn btn-secondary">Quay lại</a>
+        <a asp-area="Admin" asp-controller="Combo" asp-action="Edit" asp-route-id="@Model.ComboID" class="btn btn-primary">Sửa</a>
+    </div>
+</div>

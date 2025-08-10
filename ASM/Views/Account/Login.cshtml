@@ -1,0 +1,98 @@
+﻿@using ASM.Models.ViewModels.User
+@model UserLoginViewModel
+
+<h2>Đăng nhập</h2>
+
+<section>
+    <form asp-action="Login" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <input type="hidden" asp-for="ReturnUrl" />
+
+        <div class="form-group">
+            <label asp-for="Email"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Password"></label>
+            <input asp-for="Password" type="password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Đăng nhập</button>
+        <a class="btn btn-danger" asp-controller="Account" asp-action="GoogleLogin">
+            <i class="fa fa-google"></i> Đăng nhập với Google
+        </a>
+        <!-- Nút mở modal Đăng ký -->
+        <button type="button" class="btn btn-link" data-toggle="modal" data-target="#registerModal">
+            Chưa có tài khoản? Đăng ký
+        </button>
+    </form>
+</section>
+
+<!--Modal đăng ký -->
+@{
+    var registerModel = new ASM.Models.ViewModels.User.UserRegisterViewModel();
+}
+<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="registerModalLabel">Đăng ký tài khoản</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Đóng">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                @* Đăng ký tài khoản *@
+                <form asp-action="Register" asp-controller="Account" method="post">
+                    <div class="form-group">
+                        <label asp-for="@registerModel.FullName"></label>
+                        <input asp-for="@registerModel.FullName" class="form-control" name="FullName" />
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="@registerModel.Email"></label>
+                        <input asp-for="@registerModel.Email" class="form-control" name="Email" />
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="@registerModel.Password"></label>
+                        <input asp-for="@registerModel.Password" type="password" class="form-control" name="Password" />
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="@registerModel.ConfirmPassword"></label>
+                        <input asp-for="@registerModel.ConfirmPassword" type="password" class="form-control" name="ConfirmPassword" />
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="@registerModel.Phone"></label>
+                        <input asp-for="@registerModel.Phone" class="form-control" name="Phone" />
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="@registerModel.Address"></label>
+                        <input asp-for="@registerModel.Address" class="form-control" name="Address" />
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Đăng ký</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+}

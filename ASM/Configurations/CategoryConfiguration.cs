@@ -10,6 +10,11 @@ namespace ASM.Configurations
         {
             builder.HasKey(c => c.CategoryID);
             builder.Property(c => c.CategoryName).IsRequired().HasMaxLength(100);
+            builder.HasData(
+               new Category { CategoryID = 1, CategoryName = "Burger" },
+               new Category { CategoryID = 2, CategoryName = "Pizza" },
+               new Category { CategoryID = 3, CategoryName = "Nước uống" }
+       );
         }
     }
 }

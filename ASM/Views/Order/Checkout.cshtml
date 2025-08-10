@@ -1,0 +1,83 @@
+﻿@using ASM.Models.ViewModels.Order;
+@model OrderCreateViewModel
+
+@{
+    ViewData["Title"] = "Thanh toán đơn hàng";
+}
+
+<h2 class="mb-4">Thanh toán đơn hàng</h2>
+
+<form asp-action="Checkout" method="post" class="container mt-4">
+    <div class="row">
+        <!-- Cột trái: Thông tin nhận hàng -->
+        <div class="col-md-6">
+            <h4>Thông tin nhận hàng</h4>
+            <div class="form-group mb-3">
+                <label asp-for="DeliveryAddress" class="form-label">Địa chỉ giao hàng</label>
+                <input asp-for="DeliveryAddress" class="form-control" />
+                <span asp-validation-for="DeliveryAddress" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Note" class="form-label">Ghi chú (nếu có)</label>
+                <input asp-for="Note" class="form-control" />
+            </div>
+        </div>
+
+        <!-- Cột phải: Danh sách món -->
+        <div class="col-md-6">
+            <h4>Đơn hàng của bạn</h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Sản phẩm</th>
+                        <th>Số lượng</th>
+                        <th>Thành tiền</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.Items.Count; i++)
+                    {
+                        <tr>
+                            <td>
+                                <input type="hidden" asp-for="Items[@i].ProductID" />
+                                <input asp-for="Items[@i].ComboID" type="hidden" />
+                                @Model.Items[i].ProductName
+                            </td>
+                            <td>
+                                <input asp-for="Items[@i].Quantity" class="form-control" />
+                                <span asp-validation-for="Items[@i].Quantity" class="text-danger"></span>
+                            </td>
+                            <td>
+                                @Model.Items[i].TotalPrice VNĐ
+                            </td>
+                            <td><button>V</button></td>
+                        </tr>
+
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3" class="text-end"><strong>Tổng cộng:</strong></td>
+                        <td>
+                            <strong>
+                                @Model.Items.Sum(i => i.TotalPrice) VNĐ
+                            </strong>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <div class="mt-4 d-flex justify-content-between">
+        <a asp-controller="Cart" asp-action="Index" class="btn btn-secondary">Quay lại giỏ hàng</a>
+        <button type="submit" class="btn btn-success">Xác nhận đặt hàng</button>
+    </div>
+</form>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

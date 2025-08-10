@@ -1,0 +1,68 @@
+﻿@model ASM.Models.ViewModels.Combo.ComboCreateViewModel
+@{
+    ViewData["Title"] = "Thêm sản phẩm mới";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<h1>Thêm Combo mới</h1>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+
+        <form asp-action="Create" method="post">
+            <div class="form-group">
+                <label asp-for="ComboName"></label>
+                <input asp-for="ComboName" class="form-control" />
+                <span asp-validation-for="ComboName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Description"></label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Price"></label>
+                <input asp-for="Price" type="number" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+
+            <h4>Sản phẩm trong Combo</h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Sản phẩm</th>
+                        <th>Số lượng</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.ItemsCombo.Items.Count; i++)
+                    {
+                        <tr>
+                            <td>
+                                <select asp-for="ItemsCombo.Items[@i].ProductID" class="form-control" asp-items="ViewBag.Products">
+                                    <option value="">-- Chọn sản phẩm --</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input asp-for="ItemsCombo.Items[@i].Quantity" class="form-control" type="number" min="1" />
+                            </td>
+                            <td>
+                                <button type="submit" name="action" value="remove"
+                                        formaction="@Url.Action("Create", new { removeIndex = i })"
+                                        class="btn btn-danger">
+                                    -
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <button type="submit" name="action" value="add" class="btn btn-primary">+ Thêm sản phẩm</button>
+            <button type="submit" name="action" value="save" class="btn btn-success">💾 Lưu Combo</button>
+        </form>
+    </div>
+</div>
